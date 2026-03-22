@@ -1,0 +1,40 @@
+<div class="config-container">
+  <div class="config-card">
+    <div class="config-header">
+      <button class="back-btn" (click)="goBack()" title="Back to Dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <h2>System Configuration</h2>
+    </div>
+
+    <div class="config-body">
+      <div class="config-section">
+        <h3>Game API Settings</h3>
+        <p class="section-description">Set the base endpoint for all game interactions (states, levers, etc.).</p>
+        
+        <div class="input-group">
+          <label for="apiUrl">Base API URL</label>
+          <div class="input-wrapper">
+            <input 
+              id="apiUrl" 
+              type="text" 
+              [(ngModel)]="baseApiUrl" 
+              placeholder="http://localhost:8080/api"
+              (keyup.enter)="saveConfig()" />
+            <button class="save-btn" (click)="saveConfig()">Update</button>
+          </div>
+          <small class="help-text">Currently: <code>{{ baseApiUrl }}</code></small>
+        </div>
+      </div>
+
+      <div class="info-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span>Changes are applied immediately across all connected clients.</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "rule_1774113415272",
+    "tag": "Untagged",
+    "conditions": [
+      {
+        "state": "httpdebitSrcinsuff",
+        "value": true
+      }
+    ],
+    "action": {
+      "lever": "Levier HTTP 1",
+      "value": true
+    },
+    "enabled": true
+  },
+  {
+    "tag": "Source",
+    "nodes": [
+      {
+        "id": "node_1774116548323",
+        "type": "not",
+        "x": 485,
+        "y": 83
+      },
+      {
+        "id": "node_1774116552336",
+        "type": "state",
+        "x": 45,
+        "y": 106,
+        "config": {
+          "name": "httpdebitSrcinsuff"
+        }
+      },
+      {
+        "id": "node_1774116562687",
+        "type": "lever",
+        "x": 892,
+        "y": 110,
+        "config": {
+          "name": "Levier HTTP 1"
+        }
+      }
+    ],
+    "wires": [
+      {
+        "id": "wire_1774116558192",
+        "fromNodeId": "node_1774116552336",
+        "toId": "node_1774116548323"
+      },
+      {
+        "id": "wire_1774116568186",
+        "fromNodeId": "node_1774116548323",
+        "toId": "node_1774116562687"
+      }
+    ]
+  }
+]

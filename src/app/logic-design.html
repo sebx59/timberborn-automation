@@ -1,0 +1,123 @@
+<div class="logic-container node-mode">
+  <!-- Top Toolbox -->
+  <div class="logic-toolbox">
+    <div class="toolbox-header">
+      <button class="back-btn" (click)="goBack()" title="Back to Dashboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="toolbox-title">
+        <h2>Logic <span>Designer</span> <span class="tag-badge">#{{tag}}</span></h2>
+      </div>
+    </div>
+    <div class="toolbox-items">
+      <div class="toolbox-label">Operators:</div>
+      <button class="tool-btn and" (click)="addOperator('and')">AND</button>
+      <button class="tool-btn or" (click)="addOperator('or')">OR</button>
+      <button class="tool-btn xor" (click)="addOperator('xor')">XOR</button>
+      <button class="tool-btn not" (click)="addOperator('not')">NOT</button>
+      <div class="v-divider"></div>
+      <button class="save-graph-btn" (click)="saveGraph()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save & Apply
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-layout">
+    <!-- Left Sidebar: States -->
+    <aside class="sidebar left-sidebar">
+      <div class="sidebar-header">
+        <h3>States</h3>
+      </div>
+      <div class="card-list">
+        <div *ngFor="let s of states" class="mini-card state-item" (click)="addStateNode(s)">
+          <div class="card-top">
+            <span class="card-label">{{ stateLabels[s] || s }}</span>
+            <span class="status-dot" [class.on]="currentStates[s]"></span>
+          </div>
+          <div class="card-meta">
+            <span class="status-text">{{ currentStates[s] ? 'ON' : 'OFF' }}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Canvas Zone -->
+    <div class="canvas-wrapper">
+      <div class="node-canvas" (mouseup)="onMouseUp()">
+        <svg class="wires-layer">
+          <path *ngFor="let wire of wires" 
+                [attr.d]="getWirePath(wire)" 
+                class="logic-wire" 
+                [class.active]="isWireActive(wire)" 
+                (click)="removeWire(wire.id)" />
+        </svg>
+
+        <div *ngFor="let node of nodes" 
+             class="logic-node" 
+             [class]="node.type"
+             [class.pending-source]="pendingSource === node.id"
+             [style.left.px]="node.x"
+             [style.top.px]="node.y"
+             (mousedown)="startDragging($event, node)">
+          
+          <div class="node-header">
+            <span class="node-type-label">{{ node.type.toUpperCase() }}</span>
+            <button class="node-delete" (click)="removeNode(node.id); $event.stopPropagation()">×</button>
+          </div>
+
+          <div class="node-body">
+            <!-- State Node Content -->
+            <div *ngIf="node.type === 'state'" class="node-content">
+                <span class="node-title">{{ stateLabels[node.config?.name!] || node.config?.name }}</span>
+            </div>
+
+            <!-- Operator Node Content -->
+            <div *ngIf="['and','or','xor','not'].includes(node.type)" class="node-content center">
+                <span class="op-icon">{{ node.type }}</span>
+            </div>
+
+            <!-- Lever Node Content -->
+            <div *ngIf="node.type === 'lever'" class="node-content">
+                <span class="node-title">{{ leverLabels[node.config?.name!] || node.config?.name }}</span>
+            </div>
+          </div>
+
+          <!-- Ports -->
+          <div class="ports-container">
+            <!-- Inputs (Left side) -->
+            <div class="inputs-column" *ngIf="node.type !== 'state'">
+               <div class="port-group" *ngIf="node.type !== 'not' && node.type !== 'lever'">
+                   <div class="port input-port" (click)="onPortClick(node.id, false, 'in1'); $event.stopPropagation()"></div>
+                   <div class="port input-port" (click)="onPortClick(node.id, false, 'in2'); $event.stopPropagation()"></div>
+               </div>
+               <div class="port-group" *ngIf="node.type === 'not' || node.type === 'lever'">
+                   <div class="port input-port" (click)="onPortClick(node.id, false); $event.stopPropagation()"></div>
+               </div>
+            </div>
+
+            <!-- Output (Right side) -->
+            <div class="outputs-column" *ngIf="node.type !== 'lever'">
+                <div class="port output-port" (click)="onPortClick(node.id, true); $event.stopPropagation()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Levers -->
+    <aside class="sidebar right-sidebar">
+      <div class="sidebar-header">
+        <h3>Levers</h3>
+      </div>
+      <div class="card-list">
+        <div *ngFor="let l of levers" class="mini-card lever-item" (click)="addLeverNode(l)">
+          <div class="card-top">
+            <span class="card-label">{{ leverLabels[l] || l }}</span>
+            <span class="status-dot" [class.on]="currentLevers[l]?.state"></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

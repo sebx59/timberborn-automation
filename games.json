@@ -1,0 +1,198 @@
+{
+  "test": {
+    "startTime": 1774112068611,
+    "states": {
+      "http fab explosifs": false,
+      "http fab planches": false,
+      "httpdebitSrcinsuff": true,
+      "Fabriquer Papier ?": false,
+      "httpsrcpolluee": false,
+      "http fab blc metal": false,
+      "httpFabPlanchesTrait": false,
+      "http Tmp2 cont": false,
+      "unused": false,
+      "Fabriquer Engrenages ?": true,
+      "http recup feraille": true,
+      "Fab Résine de Pin ?": false
+    },
+    "history": [
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 2315921
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 2330084
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 2362762
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 2372335
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 2492417
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 2498865
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 2524170
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 2526572
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 2546491
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 2551259
+      },
+      {
+        "name": "http fab planches",
+        "state": false,
+        "relativeTime": 4782411
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 4824687
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 4831208
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5288984
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 5295241
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5312749
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 5318369
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5325478
+      },
+      {
+        "name": "http fab blc metal",
+        "state": false,
+        "relativeTime": 5367830
+      },
+      {
+        "name": "Fabriquer Engrenages ?",
+        "state": true,
+        "relativeTime": 5372071
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 5478830
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5513356
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 5539560
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5550569
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": false,
+        "relativeTime": 5553040
+      },
+      {
+        "name": "httpdebitSrcinsuff",
+        "state": true,
+        "relativeTime": 5574219
+      }
+    ],
+    "tags": {
+      "httpdebitSrcinsuff": [
+        "Source"
+      ]
+    },
+    "labels": {
+      "httpdebitSrcinsuff": "Débit insuffisant"
+    },
+    "levers": {
+      "Levier HTTP 1": {
+        "state": false,
+        "springReturn": false
+      }
+    },
+    "leverLabels": {},
+    "leverTags": {
+      "Levier HTTP 1": [
+        "Source"
+      ]
+    },
+    "leverHistory": [
+      {
+        "name": "Levier HTTP 1",
+        "state": false,
+        "relativeTime": 2320628
+      },
+      {
+        "name": "Levier HTTP 1",
+        "state": false,
+        "relativeTime": 2367484
+      },
+      {
+        "name": "Levier HTTP 1",
+        "state": false,
+        "relativeTime": 2493875
+      },
+      {
+        "name": "Levier HTTP 1",
+        "state": false,
+        "relativeTime": 2548896
+      },
+      {
+        "name": "Levier HTTP 1",
+        "state": false,
+        "relativeTime": 4463117
+      }
+    ]
+  }
+}

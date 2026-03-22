@@ -1,0 +1,335 @@
+<div class="dashboard-container">
+  <!-- Join Game Screen -->
+  <div *ngIf="!gameContext" class="join-screen empty-state">
+    <div class="header-logo">
+      <div class="pulse-ring"></div>
+      <div class="pulse-dot"></div>
+    </div>
+    <h2>Welcome to Timberborn Automation</h2>
+    <p>Please enter a Session or Game Name to connect to the backend.</p>
+    <div class="join-form">
+      <input type="text" [(ngModel)]="gameNameInput" placeholder="e.g. Map 1" (keyup.enter)="joinGame()" />
+      <button (click)="joinGame()">Set Game</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Screen -->
+  <div *ngIf="gameContext" class="dashboard-wrapper">
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="header-logo">
+          <div class="pulse-ring"></div>
+          <div class="pulse-dot"></div>
+        </div>
+        <div class="header-text">
+          <div class="title-row">
+            <h1>Timberborn Automation</h1>
+            <button class="nav-icon-btn dashboard-config-btn" routerLink="/config" title="Settings">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="subtitle game-info">Connected to <strong>{{ gameContext.name }}</strong> | Started: {{
+            gameContext.startTime | date:'mediumTime' }}</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <div class="columns-wrapper">
+        <div class="column left-column">
+          <div class="states-header">
+            <h2 class="column-title" style="border-bottom: none; margin-bottom: 0;">States</h2>
+            <div class="header-actions">
+              <!-- Sync Icon -->
+              <button class="icon-button" (click)="syncAdapters()" [class.syncing]="isSyncing" title="Synchronize adapters">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2v6h-6"/>
+                  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                  <path d="M3 22v-6h6"/>
+                  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                </svg>
+              </button>
+              <!-- Time / Graph Icon -->
+              <button class="icon-button" (click)="openHistoryModal()" title="View History Graphs">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 3v18h18" />
+                  <path d="M18 9l-5 5-4-4-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <!-- Sync error banner -->
+          <div class="sync-error-banner" *ngIf="syncError">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Could not reach adapter API: {{ syncError }}
+          </div>
+          <div *ngIf="!hasVariables" class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <h2>Waiting for data...</h2>
+            <p>Make a request to <br /><code>http://localhost:8081/on/{{ '{' }}name{{ '}' }}</code> <br />to see
+              variables appear here.</p>
+          </div>
+
+          <ng-container *ngIf="hasVariables">
+            <div class="category-block" *ngFor="let group of groupedStates">
+              <div class="category-header">
+                <h3 class="category-title" (click)="toggleCategory(group.tag)">
+                  <span class="collapse-icon" [class.collapsed]="collapsedCategories[group.tag]">▼</span>
+                  {{ group.tag }}
+                </h3>
+                <button class="group-graph-btn" (click)="openHistoryModal(group.tag)" title="View group history">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18" /><path d="M18 9l-5 5-2-2-4 4" />
+                  </svg>
+                </button>
+                <button class="group-graph-btn logic-btn" [routerLink]="['/logic', group.tag]" title="Design logic for this group">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                  </svg>
+                </button>
+              </div>
+              <div class="grid-container" *ngIf="!collapsedCategories[group.tag]">
+                <div class="variable-card" *ngFor="let key of group.states">
+                  <div class="card-header">
+                    <div class="name-and-tags">
+                      <div class="label-row">
+                        <span class="variable-name">{{ getLabel(key) }}</span>
+                        <!-- Rename State Button -->
+                        <button class="rename-btn" (click)="openRenameModal(key); $event.stopPropagation()" title="Rename state">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                        </button>
+                        <!-- Missing Badge (States only) -->
+                        <span class="missing-badge" *ngIf="isMissing(key)" title="This state was not found in last adapter sync.">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="tags-container">
+                        <span class="tag-badge" *ngFor="let tag of (tags[key] || [])">
+                          {{ tag }}
+                          <button class="remove-tag-btn" (click)="removeTag(key, tag); $event.stopPropagation()" title="Remove tag">✕</button>
+                        </span>
+                        <button class="add-tag-btn" (click)="openTagModal(key); $event.stopPropagation()" title="Add Tag">＋</button>
+                      </div>
+                    </div>
+                    <div class="card-right">
+                      <button class="status-indicator lever-switch" 
+                        [class.is-on]="states[key]" 
+                        [class.is-off]="!states[key]"
+                        (click)="toggleState(key)"
+                        title="Toggle state">
+                        <div class="indicator-dot"></div>
+                        <span>{{ states[key] ? 'ON' : 'OFF' }}</span>
+                      </button>
+                      <!-- Delete Button -->
+                      <button class="delete-state-btn" (click)="deleteState(key); $event.stopPropagation()" title="Delete state">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+
+        <!-- Right Column: Levers -->
+        <div class="column right-column">
+          <div class="states-header">
+            <h2 class="column-title" style="border-bottom: none; margin-bottom: 0;">Levers</h2>
+            <div class="header-actions">
+              <!-- Sync Icon -->
+              <button class="icon-button" (click)="syncLevers()" [class.syncing]="isSyncingLevers" title="Synchronize levers">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 2v6h-6"/>
+                  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                  <path d="M3 22v-6h6"/>
+                  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+                </svg>
+              </button>
+              <!-- History Icon for Levers -->
+              <button class="icon-button" (click)="openHistoryModal(undefined, 'levers')" title="View all lever history">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18" /><path d="M18 9l-5 5-2-2-4 4" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Lever sync error banner -->
+          <div class="sync-error-banner" *ngIf="leverSyncError">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Could not reach lever API: {{ leverSyncError }}
+          </div>
+
+          <div *ngIf="objectKeys(levers).length === 0" class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <h2>No levers found</h2>
+            <p>Use the refresh button to discover available levers.</p>
+          </div>
+
+          <div class="category-block" *ngFor="let group of groupedLevers">
+            <div class="category-header">
+              <h3 class="category-title" (click)="toggleCategory('lever-'+group.tag)">
+                <span class="collapse-icon" [class.collapsed]="collapsedCategories['lever-'+group.tag]">▼</span>
+                {{ group.tag }}
+              </h3>
+              <button class="group-graph-btn" (click)="openHistoryModal(group.tag, 'levers')" title="View group history">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18" /><path d="M18 9l-5 5-2-2-4 4" />
+                </svg>
+              </button>
+              <button class="group-graph-btn logic-btn" [routerLink]="['/logic', group.tag]" title="Design logic for this group">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>
+              </button>
+            </div>
+            <div class="grid-container" *ngIf="!collapsedCategories['lever-'+group.tag]">
+              <div class="variable-card" *ngFor="let key of group.levers">
+                <div class="card-header">
+                  <div class="name-and-tags">
+                    <div class="label-row">
+                      <span class="variable-name">{{ getLeverLabel(key) }}</span>
+                      <!-- Rename Lever Button -->
+                      <button class="rename-btn" (click)="openLeverRenameModal(key); $event.stopPropagation()" title="Rename lever">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                      <!-- Spring icon (Levers only) -->
+                      <span class="spring-icon" *ngIf="levers[key].springReturn" title="Spring Return Lever">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="tags-container">
+                      <span class="tag-badge" *ngFor="let tag of (leverTags[key] || [])">
+                        {{ tag }}
+                        <button class="remove-tag-btn" (click)="removeLeverTag(key, tag); $event.stopPropagation()" title="Remove tag">✕</button>
+                      </span>
+                      <button class="add-tag-btn" (click)="openLeverTagModal(key); $event.stopPropagation()" title="Add Tag">＋</button>
+                    </div>
+                  </div>
+                  <div class="card-right">
+                    <button class="status-indicator lever-switch" [class.is-on]="levers[key].state" [class.is-off]="!levers[key].state" (click)="toggleLever(key)" title="Toggle lever">
+                      <div class="indicator-dot"></div>
+                      <span>{{ levers[key].state ? 'ON' : 'OFF' }}</span>
+                    </button>
+                    <!-- Delete Placeholder (hidden for Levers currently if you want, but for same template, I'll keep it as a button that does nothing or hide it) -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Add Lever Tag Modal -->
+    <div class="modal-overlay" *ngIf="showLeverTagModal" (click)="closeLeverTagModal()">
+      <div class="modal-content tag-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Add Tag to {{ tagTargetLever }}</h2>
+          <button class="close-btn" (click)="closeLeverTagModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="join-form">
+            <input type="text" [(ngModel)]="tagInput" list="tagOptions" placeholder="Type or select a tag..."
+              (keyup.enter)="confirmAddLeverTag()" autofocus />
+            <datalist id="tagOptions">
+              <option *ngFor="let t of allTags" [value]="t"></option>
+            </datalist>
+            <button (click)="confirmAddLeverTag()">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rename Lever Modal -->
+    <div class="modal-overlay" *ngIf="showLeverRenameModal" (click)="closeLeverRenameModal()">
+      <div class="modal-content tag-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Rename "{{ renameTargetLever }}"</h2>
+          <button class="close-btn" (click)="closeLeverRenameModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="join-form">
+            <input type="text" [(ngModel)]="renameLeverInput" placeholder="Enter a label..."
+              (keyup.enter)="confirmLeverRename()" autofocus />
+            <button (click)="confirmLeverRename()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Tag Modal -->
+    <div class="modal-overlay" *ngIf="showTagModal" (click)="closeTagModal()">
+      <div class="modal-content tag-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Add Tag to {{ tagTargetState }}</h2>
+          <button class="close-btn" (click)="closeTagModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="join-form">
+            <input type="text" [(ngModel)]="tagInput" list="tagOptions" placeholder="Type or select a tag..."
+              (keyup.enter)="confirmAddTag()" />
+            <datalist id="tagOptions">
+              <option *ngFor="let t of allTags" [value]="t"></option>
+            </datalist>
+            <button (click)="confirmAddTag()">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div class="modal-overlay" *ngIf="showRenameModal" (click)="closeRenameModal()">
+      <div class="modal-content tag-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Rename "{{ renameTargetState }}"</h2>
+          <button class="close-btn" (click)="closeRenameModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="join-form">
+            <input type="text" [(ngModel)]="renameInput" placeholder="Enter a label..."
+              (keyup.enter)="confirmRename()" />
+            <button (click)="confirmRename()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Modal Component -->
+    <app-history-modal 
+      [show]="showHistoryModal" 
+      [gameContext]="gameContext" 
+      [history]="historySource === 'states' ? history : leverHistory" 
+      [states]="historySource === 'states' ? states : getLeverStateMap()"
+      [labels]="historySource === 'states' ? labels : leverLabels"
+      [displayKeys]="historyDisplayKeys"
+      (close)="closeHistoryModal()">
+    </app-history-modal>
+  </div>
+</div>
