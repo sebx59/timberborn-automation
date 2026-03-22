@@ -150,10 +150,14 @@
     "tags": {
       "httpdebitSrcinsuff": [
         "Source"
+      ],
+      "httpsrcpolluee": [
+        "Source"
       ]
     },
     "labels": {
-      "httpdebitSrcinsuff": "Débit insuffisant"
+      "httpdebitSrcinsuff": "Débit insuffisant",
+      "httpsrcpolluee": "Source contaminée"
     },
     "levers": {
       "Levier HTTP 1": {
